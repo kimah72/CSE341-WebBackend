@@ -1,7 +1,15 @@
-# Test GET /
-GET https://cse341-webbackend.onrender.com
+# Test GET / on Render
+GET https://cse341-webbackend.onrender.com/
 
 ###
 
-# Test GET /items
-GET https://cse341-web-backend.onrender.com/items
+# Test GET /contacts on Render
+GET https://cse341-webbackend.onrender.com/contacts
+
+###
+
+# Test POST /contacts on Render
+POST https://cse341-webbackend.onrender.com/contacts
+Content-Type: application/json
+
+{"firstName":"Carol","lastName":"Jones","email":"carol@example.com"}
