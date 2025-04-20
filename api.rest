@@ -1,0 +1,7 @@
+# Test GET /
+GET https://cse341-webbackend.onrender.com
+
+###
+
+# Test GET /items
+GET https://cse341-web-backend.onrender.com/items
