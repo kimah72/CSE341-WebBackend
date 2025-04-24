@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "devStart": "nodemon server.js"
+    "devStart": "nodemon server.js",
+    "prebuild": "rm -rf node_modules package-lock.json && npm install"
   },
   "dependencies": {
     "express": "^4.19.2"
