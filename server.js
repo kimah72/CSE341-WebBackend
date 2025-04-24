@@ -1,9 +1,11 @@
-const express = require('express');
-const app = express();
+const http = require('http');
+
+const server = http.createServer((req, res) => {
+  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  res.end('Sarah Birch');
+});
+
 const port = process.env.PORT || 3000;
-
-app.use('/', require('./routes'))
-
-app.listen(port, () => {
-    console.log(`Running on port ${port}`)
-})
+server.listen(port, () => {
+  console.log(`Running on port ${port}`);
+});
