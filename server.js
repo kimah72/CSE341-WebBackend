@@ -1,18 +1,9 @@
-require("dotenv").config();
-const express = require("express");
-const connectDB = require("./database");
-const routes = require("./routes/index");
-
+const express = require('express');
 const app = express();
+const port = process.env.PORT || 3000;
 
-// Connect to MongoDB
-connectDB();
+app.use('/', require('./routes'))
 
-// Middleware
-app.use(express.json());
-app.use("/", routes);
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+app.listen(port, () => {
+    console.log(`Running on port ${port}`)
+})
