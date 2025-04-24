@@ -1,3 +1,5 @@
-exports.getData = (req, res) => {
-    res.json({ message: "Hello from the controller!" });
-};
+const getName = (req, res) => {
+    res.send("Kim Miner");
+  };
+  
+  module.exports = { getName };
