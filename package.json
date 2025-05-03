@@ -8,7 +8,10 @@
     "devStart": "nodemon server.js"
   },
   "dependencies": {
-    "express": "^4.19.2"
+    "dotenv": "^16.5.0",
+    "express": "^4.19.2",
+    "mongodb": "^6.16.0",
+    "mongoose": "^8.14.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"
