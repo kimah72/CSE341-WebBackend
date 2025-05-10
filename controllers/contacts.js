@@ -15,7 +15,10 @@ const getAll = async (req, res) => {
 const getSingle = async (req, res) => {
   try {
     const userId = new ObjectId(req.params.id);
-    const result = await mongodb.getDb().collection("contacts").findOne({ _id: userId });
+    const result = await mongodb
+      .getDb()
+      .collection("contacts")
+      .findOne({ _id: userId });
     if (!result) {
       return res.status(404).json({ error: "Contact not found" });
     }
@@ -32,11 +35,16 @@ const createContact = async (req, res) => {
 
     // Validate required fields
     if (!firstName || !lastName || !email) {
-      return res.status(400).json({ error: "First name, last name, and email are required" });
+      return res
+        .status(400)
+        .json({ error: "First name, last name, and email are required" });
     }
 
     const contact = { firstName, lastName, email, favoriteColor, birthday };
-    const response = await mongodb.getDb().collection("contacts").insertOne(contact);
+    const response = await mongodb
+      .getDb()
+      .collection("contacts")
+      .insertOne(contact);
 
     if (response.acknowledged) {
       res.status(201).json({ id: response.insertedId }); // Return only ID
@@ -58,7 +66,9 @@ const updateContact = async (req, res) => {
 
     // Validate required fields
     if (!firstName || !lastName || !email) {
-      return res.status(400).json({ error: "First name, last name, and email are required" });
+      return res
+        .status(400)
+        .json({ error: "First name, last name, and email are required" });
     }
 
     const contact = { firstName, lastName, email, favoriteColor, birthday };
