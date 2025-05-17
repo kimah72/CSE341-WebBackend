@@ -7,18 +7,18 @@ GET http://localhost:3000/
 GET http://localhost:3000/contacts
 
 ### Get contact by id
-GET http://localhost:3000/contacts/681fa46d5e41dc07dd81635f
+GET http://localhost:3000/contacts/681fa46d5e41dc07dd81635f HTTP/1.1
 
 ### Create contact
 POST http://localhost:3000/contacts HTTP/1.1
 content-type: application/json
 
 {
-    "firstName": "John",
-    "lastName": "Doe",
-    "email": "john@example.com",
-    "favoriteColor": "Black",
-    "birthday": "2011-11-11"
+  "firstName": "Emma",
+  "lastName": "Davis",
+  "email": "emma.davis@example.com",
+  "favoriteColor": "Purple",
+  "birthday": "1990-06-25"
 }
 
 ### PUT contact
@@ -26,11 +26,11 @@ PUT http://localhost:3000/contacts/681f95c0f744b3159bf98fbe HTTP/1.1
 content-type: application/json
 
 {
-    "firstName": "Carol",
-    "lastName": "Smith",
-    "email": "carol.smith@example.com",
-    "favoriteColor": "Purple",
-    "birthday": "1990-05-15"
+  "firstName": "Emma",
+  "lastName": "Davis",
+  "email": "emma.davis@example.com",
+  "favoriteColor": "Pink",
+  "birthday": "1990-06-25"
 }
 
 ### DELETE contact
@@ -44,18 +44,18 @@ GET https://cse341-webbackend.onrender.com/
 GET https://cse341-webbackend.onrender.com/contacts
 
 ### Get contact by id
-GET https://cse341-webbackend.onrender.com/contacts/681f94ccf744b3159bf98fbd HTTP/1.1
+GET https://cse341-webbackend.onrender.com/contacts/68290d7d80ae12a73046c829 HTTP/1.1
 
 ### Create contact
 POST https://cse341-webbackend.onrender.com/contacts HTTP/1.1
 content-type: application/json
 
 {
-    "firstName": "Carol",
-    "lastName": "Jones",
-    "email": "carol@example.com",
-    "favoriteColor": "Blue",
-    "birthday": "1990-05-15"
+  "firstName": "Clara",
+  "lastName": "Williams",
+  "email": "clara.williams@example.com",
+  "favoriteColor": "Yellow",
+  "birthday": "1988-11-30"
 }
 
 ### PUT contact
@@ -66,7 +66,7 @@ content-type: application/json
     "firstName": "Carol",
     "lastName": "Smith",
     "email": "carol.smith@example.com",
-    "favoriteColor": "Purple",
+    "favoriteColor": "Turquoise",
     "birthday": "1990-05-15"
 }
 
