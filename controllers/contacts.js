@@ -1,6 +1,7 @@
 const mongodb = require('../database');
 const ObjectId = require('mongodb').ObjectId;
 
+// JSDoc for Swagger documentation
 /**
  * @swagger
  * /contacts:

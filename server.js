@@ -16,7 +16,7 @@ initDb((err) => {
   }
   app.use(cors()); // Add CORS middleware
   app.use(bodyParser.json());
-  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
+  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs)); // Serve Swagger UI
   app.use("/", require("./routes"));
 
   app.listen(port, () => {
