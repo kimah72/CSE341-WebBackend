@@ -1,0 +1,190 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Task Manager API",
+    "description": "API for managing tasks with CRUD operations",
+    "version": "1.0.0"
+  },
+"host": "task-manager-api-9tji.onrender.com",
+"basePath": "/api",
+"schemes": ["https"],
+"paths": {
+  "/tasks": {
+    "get": {
+      "tags": ["Tasks"],
+      "summary": "Get all tasks",
+      "description": "Retrieves a list of all tasks",
+      "responses": {
+        "200": {
+          "description": "List of all tasks",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": { "$ref": "#/definitions/Task" }
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Server error"
+        }
+      }
+    },
+    "post": {
+      "tags": ["Tasks"],
+      "summary": "Create a new task",
+      "description": "Creates a new task with the provided details",
+      "parameters": [
+        {
+          "in": "body",
+          "name": "body",
+          "description": "Task data",
+          "required": true,
+          "schema": { "$ref": "#/definitions/Task" }
+        }
+      ],
+      "responses": {
+        "201": {
+          "description": "Task created",
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/definitions/Task" }
+            }
+          }
+        },
+        "400": {
+          "description": "Invalid data"
+        }
+      }
+    }
+  },
+  "/tasks/{id}": {
+    "get": {
+      "tags": ["Tasks"],
+      "summary": "Get a task by ID",
+      "description": "Retrieves a single task by its ID",
+      "parameters": [
+        {
+          "in": "path",
+          "name": "id",
+          "description": "Task ID",
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Task found",
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/definitions/Task" }
+            }
+          }
+        },
+        "404": {
+          "description": "Task not found"
+        },
+        "500": {
+          "description": "Server error"
+        }
+      }
+    },
+    "put": {
+      "tags": ["Tasks"],
+      "summary": "Update a task",
+      "description": "Updates an existing task by its ID",
+      "parameters": [
+        {
+          "in": "path",
+          "name": "id",
+          "description": "Task ID",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "in": "body",
+          "name": "body",
+          "description": "Updated task data",
+          "required": true,
+          "schema": { "$ref": "#/definitions/Task" }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Task updated",
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/definitions/Task" }
+            }
+          }
+        },
+        "404": {
+          "description": "Task not found"
+        },
+        "400": {
+          "description": "Invalid data"
+        }
+      }
+    },
+    "delete": {
+      "tags": ["Tasks"],
+      "summary": "Delete a task",
+      "description": "Deletes a task by its ID",
+      "parameters": [
+        {
+          "in": "path",
+          "name": "id",
+          "description": "Task ID",
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Task deleted",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "message": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Task not found"
+        },
+        "500": {
+          "description": "Server error"
+        }
+      }
+    }
+  }
+},
+  "definitions": {
+    "Task": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "example": "Test Task"
+        },
+        "description": {
+          "type": "string",
+          "example": "Testing POST with Postman"
+        },
+        "status": {
+          "type": "string",
+          "example": "pending"
+        },
+        "dueDate": {
+          "type": "string",
+          "example": "2025-05-30"
+        }
+      }
+    }
+  }
+}
