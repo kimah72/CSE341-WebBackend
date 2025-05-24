@@ -3,7 +3,7 @@ const swaggerAutogen = require('swagger-autogen')();
 // Determine host based on environment
 const isProduction = process.env.NODE_ENV === 'production';
 const host = isProduction
-  ? 'cse341-webbackend.onrender.com/task-manager-api'
+  ? 'task-manager-api-9tji.onrender.com'
   : 'localhost:5000';
 const schemes = isProduction ? ['https'] : ['http'];
 
