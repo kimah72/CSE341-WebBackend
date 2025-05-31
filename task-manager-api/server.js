@@ -14,8 +14,12 @@ const connectDB = require("./config/db");
 connectDB();
 
 // Root route welcome message
-app.get("/", (req, res) => {
-  res.send("Welcome to the Task Manager API");
+app.get('/', (req, res) => {
+  res.send(`
+    <h1>Welcome to the Task Manager API</h1>
+    <p>Explore the API documentation and test endpoints:</p>
+    <a href="/api-docs">Go to API Documentation</a>
+  `);
 });
 
 app.use("/api", taskRoutes);
