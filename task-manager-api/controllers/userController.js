@@ -1,21 +1,31 @@
 const User = require("../models/User");
+const { validationResult } = require("express-validator");
 
-const getUsers = async (req, res) => {
+const getUsers = async (req, res, next) => {
   try {
     const users = await User.find().select("-password");
     res.status(200).json(users);
   } catch (error) {
-    res.status(500).json({ message: "Server error", error: error.message });
+    error.status = 500;
+    next(error);
   }
 };
 
-const createUser = async (req, res) => {
+const createUser = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const error = new Error("Validation failed");
+    error.status = 422;
+    error.errors = errors.array();
+    return next(error);
+  }
   try {
     const user = new User(req.body);
     await user.save();
     res.status(201).json(user);
   } catch (error) {
-    res.status(400).json({ message: "Invalid data", error: error.message });
+    error.status = 400;
+    next(error);
   }
 };
 

@@ -2,11 +2,12 @@
   "swagger": "2.0",
   "info": {
     "title": "Task Manager API",
-    "description": "API for managing tasks with CRUD operations",
+    "description": "API for managing tasks and users with CRUD operations",
     "version": "1.0.0"
   },
-  "host": "localhost:5000",
-  "schemes": ["http"],
+  "host": "task-manager-api-9tji.onrender.com",
+  "basePath": "/api",
+  "schemes": ["https"],
   "paths": {
     "/tasks": {
       "get": {
@@ -40,7 +41,38 @@
             "name": "body",
             "description": "Task data",
             "required": true,
-            "schema": { "$ref": "#/definitions/Task" }
+            "schema": {
+              "type": "object",
+              "required": ["title", "userId"],
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "description": "The title of the task",
+                  "example": "Demo Task"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "A brief description of the task",
+                  "example": "Created for Week 06 demo"
+                },
+                "status": {
+                  "type": "string",
+                  "description": "The status of the task",
+                  "enum": ["pending", "in-progress", "completed"],
+                  "example": "pending"
+                },
+                "dueDate": {
+                  "type": "string",
+                  "description": "The due date in ISO format (YYYY-MM-DD)",
+                  "example": "2025-06-01"
+                },
+                "userId": {
+                  "type": "string",
+                  "description": "The ID of the user who owns the task",
+                  "example": "1234567890abcdef12345678"
+                }
+              }
+            }
           }
         ],
         "responses": {
@@ -54,6 +86,20 @@
           },
           "400": {
             "description": "Invalid data"
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string" },
+                    "errors": { "type": "array", "items": { "type": "object" } }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -106,7 +152,38 @@
             "name": "body",
             "description": "Updated task data",
             "required": true,
-            "schema": { "$ref": "#/definitions/Task" }
+            "schema": {
+              "type": "object",
+              "required": ["title", "userId"],
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "description": "The title of the task",
+                  "example": "Demo Task Updated"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "A brief description of the task",
+                  "example": "Updated for Week 06 demo"
+                },
+                "status": {
+                  "type": "string",
+                  "description": "The status of the task",
+                  "enum": ["pending", "in-progress", "completed"],
+                  "example": "completed"
+                },
+                "dueDate": {
+                  "type": "string",
+                  "description": "The due date in ISO format (YYYY-MM-DD)",
+                  "example": "2025-06-01"
+                },
+                "userId": {
+                  "type": "string",
+                  "description": "The ID of the user who owns the task",
+                  "example": "1234567890abcdef12345678"
+                }
+              }
+            }
           }
         ],
         "responses": {
@@ -123,6 +200,20 @@
           },
           "400": {
             "description": "Invalid data"
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string" },
+                    "errors": { "type": "array", "items": { "type": "object" } }
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -194,7 +285,27 @@
             "name": "body",
             "description": "User data",
             "required": true,
-            "schema": { "$ref": "#/definitions/User" }
+            "schema": {
+              "type": "object",
+              "required": ["username", "email", "password"],
+              "properties": {
+                "username": {
+                  "type": "string",
+                  "description": "The unique username for the user",
+                  "example": "johndoe"
+                },
+                "email": {
+                  "type": "string",
+                  "description": "The user's email address",
+                  "example": "john.doe@example.com"
+                },
+                "password": {
+                  "type": "string",
+                  "description": "The user's password (min 6 characters)",
+                  "example": "secure123"
+                }
+              }
+            }
           }
         ],
         "responses": {
@@ -208,6 +319,20 @@
           },
           "400": {
             "description": "Invalid data"
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string" },
+                    "errors": { "type": "array", "items": { "type": "object" } }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -217,13 +342,17 @@
     "Task": {
       "type": "object",
       "properties": {
+        "_id": {
+          "type": "string",
+          "example": "abcdef1234567890abcdef12"
+        },
         "title": {
           "type": "string",
           "example": "Demo Task"
         },
         "description": {
           "type": "string",
-          "example": "Created for demo"
+          "example": "Created for Week 06 demo"
         },
         "status": {
           "type": "string",
@@ -232,12 +361,20 @@
         "dueDate": {
           "type": "string",
           "example": "2025-06-01"
+        },
+        "userId": {
+          "type": "string",
+          "example": "1234567890abcdef12345678"
         }
       }
     },
     "User": {
       "type": "object",
       "properties": {
+        "_id": {
+          "type": "string",
+          "example": "1234567890abcdef12345678"
+        },
         "username": {
           "type": "string",
           "example": "johndoe"
@@ -245,10 +382,6 @@
         "email": {
           "type": "string",
           "example": "john.doe@example.com"
-        },
-        "password": {
-          "type": "string",
-          "example": "securepassword"
         },
         "createdAt": {
           "type": "string",

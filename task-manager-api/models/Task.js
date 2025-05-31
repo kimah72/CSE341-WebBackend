@@ -18,6 +18,11 @@ const taskSchema = new mongoose.Schema({
   dueDate: {
     type: Date,
   },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: [true, "User ID is required"],
+  },
 });
 
 module.exports = mongoose.model("Task", taskSchema);

@@ -1,60 +1,83 @@
 const Task = require("../models/Task");
+const { validationResult } = require("express-validator");
 
-const getTasks = async (req, res) => {
+const getTasks = async (req, res, next) => {
   try {
     const tasks = await Task.find();
     res.status(200).json(tasks);
   } catch (error) {
-    res.status(500).json({ message: "Server error", error: error.message });
+    error.status = 500;
+    next(error);
   }
 };
 
-const getTaskById = async (req, res) => {
+const getTaskById = async (req, res, next) => {
   try {
     const task = await Task.findById(req.params.id);
     if (!task) {
-      return res.status(404).json({ message: "Task not found" });
+      const error = new Error("Task not found");
+      error.status = 404;
+      throw error;
     }
     res.status(200).json(task);
   } catch (error) {
-    res.status(500).json({ message: "Server error", error: error.message });
+    next(error);
   }
 };
 
-const createTask = async (req, res) => {
+const createTask = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const error = new Error("Validation failed");
+    error.status = 422;
+    error.errors = errors.array();
+    return next(error);
+  }
   try {
     const task = new Task(req.body);
     await task.save();
     res.status(201).json(task);
   } catch (error) {
-    res.status(400).json({ message: "Invalid data", error: error.message });
+    error.status = 400;
+    next(error);
   }
 };
 
-const updateTask = async (req, res) => {
+const updateTask = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const error = new Error("Validation failed");
+    error.status = 422;
+    error.errors = errors.array();
+    return next(error);
+  }
   try {
     const task = await Task.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
     });
     if (!task) {
-      return res.status(404).json({ message: "Task not found" });
+      const error = new Error("Task not found");
+      error.status = 404;
+      throw error;
     }
     res.status(200).json(task);
   } catch (error) {
-    res.status(400).json({ message: "Invalid data", error: error.message });
+    next(error);
   }
 };
 
-const deleteTask = async (req, res) => {
+const deleteTask = async (req, res, next) => {
   try {
     const task = await Task.findByIdAndDelete(req.params.id);
     if (!task) {
-      return res.status(404).json({ message: "Task not found" });
+      const error = new Error("Task not found");
+      error.status = 404;
+      throw error;
     }
     res.status(200).json({ message: "Task deleted" });
   } catch (error) {
-    res.status(500).json({ message: "Server error", error: error.message });
+    next(error);
   }
 };
 
