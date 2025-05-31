@@ -5,186 +5,261 @@
     "description": "API for managing tasks with CRUD operations",
     "version": "1.0.0"
   },
-"host": "localhost:5000",
-"basePath": "/api",
-"schemes": ["http"],
-"paths": {
-  "/tasks": {
-    "get": {
-      "tags": ["Tasks"],
-      "summary": "Get all tasks",
-      "description": "Retrieves a list of all tasks",
-      "responses": {
-        "200": {
-          "description": "List of all tasks",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": { "$ref": "#/definitions/Task" }
-              }
-            }
-          }
-        },
-        "500": {
-          "description": "Server error"
-        }
-      }
-    },
-    "post": {
-      "tags": ["Tasks"],
-      "summary": "Create a new task",
-      "description": "Creates a new task with the provided details",
-      "parameters": [
-        {
-          "in": "body",
-          "name": "body",
-          "description": "Task data",
-          "required": true,
-          "schema": { "$ref": "#/definitions/Task" }
-        }
-      ],
-      "responses": {
-        "201": {
-          "description": "Task created",
-          "content": {
-            "application/json": {
-              "schema": { "$ref": "#/definitions/Task" }
-            }
-          }
-        },
-        "400": {
-          "description": "Invalid data"
-        }
-      }
-    }
-  },
-  "/tasks/{id}": {
-    "get": {
-      "tags": ["Tasks"],
-      "summary": "Get a task by ID",
-      "description": "Retrieves a single task by its ID",
-      "parameters": [
-        {
-          "in": "path",
-          "name": "id",
-          "description": "Task ID",
-          "required": true,
-          "type": "string"
-        }
-      ],
-      "responses": {
-        "200": {
-          "description": "Task found",
-          "content": {
-            "application/json": {
-              "schema": { "$ref": "#/definitions/Task" }
-            }
-          }
-        },
-        "404": {
-          "description": "Task not found"
-        },
-        "500": {
-          "description": "Server error"
-        }
-      }
-    },
-    "put": {
-      "tags": ["Tasks"],
-      "summary": "Update a task",
-      "description": "Updates an existing task by its ID",
-      "parameters": [
-        {
-          "in": "path",
-          "name": "id",
-          "description": "Task ID",
-          "required": true,
-          "type": "string"
-        },
-        {
-          "in": "body",
-          "name": "body",
-          "description": "Updated task data",
-          "required": true,
-          "schema": { "$ref": "#/definitions/Task" }
-        }
-      ],
-      "responses": {
-        "200": {
-          "description": "Task updated",
-          "content": {
-            "application/json": {
-              "schema": { "$ref": "#/definitions/Task" }
-            }
-          }
-        },
-        "404": {
-          "description": "Task not found"
-        },
-        "400": {
-          "description": "Invalid data"
-        }
-      }
-    },
-    "delete": {
-      "tags": ["Tasks"],
-      "summary": "Delete a task",
-      "description": "Deletes a task by its ID",
-      "parameters": [
-        {
-          "in": "path",
-          "name": "id",
-          "description": "Task ID",
-          "required": true,
-          "type": "string"
-        }
-      ],
-      "responses": {
-        "200": {
-          "description": "Task deleted",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "message": { "type": "string" }
+  "host": "localhost:5000",
+  "basePath": "/api",
+  "schemes": ["http"],
+  "paths": {
+      "/tasks": {
+        "get": {
+          "tags": ["Tasks"],
+          "summary": "Get all tasks",
+          "description": "Retrieves a list of all tasks",
+          "responses": {
+            "200": {
+              "description": "List of all tasks",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": { "$ref": "#/definitions/Task" }
+                  }
                 }
               }
+            },
+            "500": {
+              "description": "Server error"
             }
           }
         },
-        "404": {
-          "description": "Task not found"
+        "post": {
+          "tags": ["Tasks"],
+          "summary": "Create a new task",
+          "description": "Creates a new task with the provided details",
+          "parameters": [
+            {
+              "in": "body",
+              "name": "body",
+              "description": "Task data",
+              "required": true,
+              "schema": { "$ref": "#/definitions/Task" }
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "Task created",
+              "content": {
+                "application/json": {
+                  "schema": { "$ref": "#/definitions/Task" }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid data"
+            }
+          }
+        }
+      },
+      "/tasks/{id}": {
+        "get": {
+          "tags": ["Tasks"],
+          "summary": "Get a task by ID",
+          "description": "Retrieves a single task by its ID",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "description": "Task ID",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Task found",
+              "content": {
+                "application/json": {
+                  "schema": { "$ref": "#/definitions/Task" }
+                }
+              }
+            },
+            "404": {
+              "description": "Task not found"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
         },
-        "500": {
-          "description": "Server error"
+        "put": {
+          "tags": ["Tasks"],
+          "summary": "Update a task",
+          "description": "Updates an existing task by its ID",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "description": "Task ID",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "in": "body",
+              "name": "body",
+              "description": "Updated task data",
+              "required": true,
+              "schema": { "$ref": "#/definitions/Task" }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Task updated",
+              "content": {
+                "application/json": {
+                  "schema": { "$ref": "#/definitions/Task" }
+                }
+              }
+            },
+            "404": {
+              "description": "Task not found"
+            },
+            "400": {
+              "description": "Invalid data"
+            }
+          }
+        },
+        "delete": {
+          "tags": ["Tasks"],
+          "summary": "Delete a task",
+          "description": "Deletes a task by its ID",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "description": "Task ID",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Task deleted",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "message": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Task not found"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        }
+      },
+      "/users": {
+        "get": {
+          "tags": ["Users"],
+          "summary": "Get all users",
+          "description": "Retrieves a list of all users (excludes passwords)",
+          "responses": {
+            "200": {
+              "description": "List of users",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": { "$ref": "#/definitions/User" }
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        },
+        "post": {
+          "tags": ["Users"],
+          "summary": "Create a new user",
+          "description": "Creates a new user with the provided details",
+          "parameters": [
+            {
+              "in": "body",
+              "name": "body",
+              "description": "User data",
+              "required": true,
+              "schema": { "$ref": "#/definitions/User" }
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "User created",
+              "content": {
+                "application/json": {
+                  "schema": { "$ref": "#/definitions/User" }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid data"
+            }
+          }
+        }
+      }
+    },
+    "definitions": {
+      "Task": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "Demo Task"
+          },
+          "description": {
+            "type": "string",
+            "example": "Created for demo"
+          },
+          "status": {
+            "type": "string",
+            "example": "pending"
+          },
+          "dueDate": {
+            "type": "string",
+            "example": "2025-06-01"
+          },
+          "userId": {
+            "type": "string",
+            "example": "12345"
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "example": "johndoe"
+          },
+          "email": {
+            "type": "string",
+            "example": "john.doe@example.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "securepassword"
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2025-05-28T10:11:00.000Z"
+          }
         }
       }
     }
   }
-},
-  "definitions": {
-    "Task": {
-      "type": "object",
-      "properties": {
-        "title": {
-          "type": "string",
-          "example": "Test Task"
-        },
-        "description": {
-          "type": "string",
-          "example": "Testing POST with Swagger"
-        },
-        "status": {
-          "type": "string",
-          "example": "pending"
-        },
-        "dueDate": {
-          "type": "string",
-          "example": "2025-05-30"
-        }
-      }
-    }
-  }
-}
