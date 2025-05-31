@@ -11,12 +11,18 @@ const {
 
 const validateTask = [
   body("title").notEmpty().withMessage("Title is required").trim(),
+  body("description").notEmpty().withMessage("Description is required").trim(),
   body("userId").isMongoId().withMessage("Invalid user ID"),
   body("status")
     .optional()
     .isIn(["pending", "in-progress", "completed"])
     .withMessage("Invalid status"),
-  body("dueDate").optional().isISO8601().withMessage("Invalid date format"),
+  body("dueDate")
+    .optional()
+    .isISO8601()
+    .withMessage("Invalid date format")
+    .matches(/^\d{4}-\d{2}-\d{2}$/)
+    .withMessage("Date must be YYYY-MM-DD"),
 ];
 
 router.get("/tasks", getTasks);
