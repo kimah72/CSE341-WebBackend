@@ -5,9 +5,9 @@
     "description": "API for managing tasks with CRUD operations",
     "version": "1.0.0"
   },
-"host": "task-manager-api-9tji.onrender.com",
+"host": "localhost:5000",
 "basePath": "/api",
-"schemes": ["https"],
+"schemes": ["http"],
 "paths": {
   "/tasks": {
     "get": {
@@ -174,7 +174,7 @@
         },
         "description": {
           "type": "string",
-          "example": "Testing POST with Postman"
+          "example": "Testing POST with Swagger"
         },
         "status": {
           "type": "string",

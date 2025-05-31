@@ -29,7 +29,7 @@ const doc = {
         },
         description: {
           type: 'string',
-          example: 'Testing POST with Postman',
+          example: 'Testing POST with Swagger',
         },
         status: {
           type: 'string',

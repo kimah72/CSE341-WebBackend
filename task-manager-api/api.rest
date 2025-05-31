@@ -1,28 +1,15 @@
 # Task Manager API Routes for Lesson 5
-# Tested on localhost:5000 and Render (replace with your Render URL)
+# Tested on localhost:5000 and Render https://task-manager-api-9tji.onrender.com
 # Use with VS Code REST Client extension
+
+// Localhost
 
 ### Localhost: GET all tasks
 GET http://localhost:5000/api/tasks
 Content-Type: application/json
 
-### Render: GET all tasks
-GET https://task-manager-api-9tji.onrender.com/api/tasks
-Content-Type: application/json
-
 ### Localhost: POST a new task
 POST http://localhost:5000/api/tasks
-Content-Type: application/json
-
-{
-  "title": "Demo Task",
-  "description": "Created for Lesson 5 demo video",
-  "status": "pending",
-  "dueDate": "2025-06-01"
-}
-
-### Render: POST a new task
-POST https://task-manager-api-9tji.onrender.com/api/tasks
 Content-Type: application/json
 
 {
@@ -37,10 +24,6 @@ Content-Type: application/json
 GET http://localhost:5000/api/tasks/68310c3c7f91edb744a28226
 Content-Type: application/json
 
-### Render: GET a task by ID
-# Replace :id with an actual _id from POST response (e.g., "12345")
-GET https://task-manager-api-9tji.onrender.com/api/tasks/68310c3c7f91edb744a28226
-Content-Type: application/json
 
 ### Localhost: PUT (update) a task
 # Replace :id with the _id from POST response
@@ -54,6 +37,33 @@ Content-Type: application/json
   "dueDate": "2025-06-01"
 }
 
+### Localhost: DELETE a task
+# Replace :id with the _id from POST response
+DELETE http://localhost:5000/api/tasks/6832405900764f2e406e6021
+Content-Type: application/json
+
+// Render
+
+### Render: GET all tasks
+GET https://task-manager-api-9tji.onrender.com/api/tasks
+Content-Type: application/json
+
+### Render: POST a new task
+POST https://task-manager-api-9tji.onrender.com/api/tasks
+Content-Type: application/json
+
+{
+  "title": "Demo Task",
+  "description": "Created for Lesson 5 demo video",
+  "status": "pending",
+  "dueDate": "2025-06-01"
+}
+
+### Render: GET a task by ID
+# Replace :id with an actual _id from POST response
+GET https://task-manager-api-9tji.onrender.com/api/tasks/68310c3c7f91edb744a28226
+Content-Type: application/json
+
 ### Render: PUT (update) a task
 # Replace :id with the _id from POST response
 PUT https://task-manager-api-9tji.onrender.com/api/tasks/6832405900764f2e406e6021
@@ -65,11 +75,6 @@ Content-Type: application/json
   "status": "completed",
   "dueDate": "2025-06-01"
 }
-
-### Localhost: DELETE a task
-# Replace :id with the _id from POST response
-DELETE http://localhost:5000/api/tasks/6832405900764f2e406e6021
-Content-Type: application/json
 
 ### Render: DELETE a task
 # Replace :id with the _id from POST response
