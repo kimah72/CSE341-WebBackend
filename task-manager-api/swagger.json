@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "title": "Task Manager API",
-    "description": "API for managing tasks and users with CRUD operations",
+    "description": "API for managing tasks and users with CRUD operations and Google OAuth authentication",
     "version": "1.0.0"
   },
   "host": "task-manager-api-9tji.onrender.com",
@@ -45,32 +45,11 @@
               "type": "object",
               "required": ["title", "userId"],
               "properties": {
-                "title": {
-                  "type": "string",
-                  "description": "The title of the task",
-                  "example": "Demo Task"
-                },
-                "description": {
-                  "type": "string",
-                  "description": "A brief description of the task",
-                  "example": "Created for Week 06 demo"
-                },
-                "status": {
-                  "type": "string",
-                  "description": "The status of the task",
-                  "enum": ["pending", "in-progress", "completed"],
-                  "example": "pending"
-                },
-                "dueDate": {
-                  "type": "string",
-                  "description": "The due date in ISO format (YYYY-MM-DD)",
-                  "example": "2025-06-01"
-                },
-                "userId": {
-                  "type": "string",
-                  "description": "The ID of the user who owns the task",
-                  "example": "1234567890abcdef12345678"
-                }
+                "title": { "type": "string" },
+                "description": { "type": "string" },
+                "status": { "type": "string" },
+                "dueDate": { "type": "string" },
+                "userId": { "type": "string" }
               }
             }
           }
@@ -156,32 +135,11 @@
               "type": "object",
               "required": ["title", "userId"],
               "properties": {
-                "title": {
-                  "type": "string",
-                  "description": "The title of the task",
-                  "example": "Demo Task Updated"
-                },
-                "description": {
-                  "type": "string",
-                  "description": "A brief description of the task",
-                  "example": "Updated for Week 06 demo"
-                },
-                "status": {
-                  "type": "string",
-                  "description": "The status of the task",
-                  "enum": ["pending", "in-progress", "completed"],
-                  "example": "completed"
-                },
-                "dueDate": {
-                  "type": "string",
-                  "description": "The due date in ISO format (YYYY-MM-DD)",
-                  "example": "2025-06-01"
-                },
-                "userId": {
-                  "type": "string",
-                  "description": "The ID of the user who owns the task",
-                  "example": "1234567890abcdef12345678"
-                }
+                "title": { "type": "string" },
+                "description": { "type": "string" },
+                "status": { "type": "string" },
+                "dueDate": { "type": "string" },
+                "userId": { "type": "string" }
               }
             }
           }
@@ -285,27 +243,7 @@
             "name": "body",
             "description": "User data",
             "required": true,
-            "schema": {
-              "type": "object",
-              "required": ["username", "email", "password"],
-              "properties": {
-                "username": {
-                  "type": "string",
-                  "description": "The unique username for the user",
-                  "example": "johndoe"
-                },
-                "email": {
-                  "type": "string",
-                  "description": "The user's email address",
-                  "example": "john.doe@example.com"
-                },
-                "password": {
-                  "type": "string",
-                  "description": "The user's password (min 6 characters)",
-                  "example": "secure123"
-                }
-              }
-            }
+            "schema": { "$ref": "#/definitions/User" }
           }
         ],
         "responses": {
@@ -336,23 +274,75 @@
           }
         }
       }
+    },
+    "/auth/google": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "Initiate Google OAuth login",
+        "description": "Redirects to Google login page",
+        "responses": {
+          "302": {
+            "description": "Redirect to Google authentication"
+          }
+        }
+      }
+    },
+    "/auth/google/callback": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "Google OAuth callback",
+        "description": "Handles Google OAuth callback and redirects to profile",
+        "responses": {
+          "302": {
+            "description": "Redirect to profile or home on failure"
+          }
+        }
+      }
+    },
+    "/profile": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "Get user profile",
+        "description": "Returns authenticated user data",
+        "responses": {
+          "200": {
+            "description": "User data",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/definitions/User" }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated"
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "Log out",
+        "description": "Logs out the user and redirects to home",
+        "responses": {
+          "302": {
+            "description": "Redirect to home"
+          }
+        }
+      }
     }
   },
   "definitions": {
     "Task": {
       "type": "object",
       "properties": {
-        "_id": {
-          "type": "string",
-          "example": "abcdef1234567890abcdef12"
-        },
         "title": {
           "type": "string",
           "example": "Demo Task"
         },
         "description": {
           "type": "string",
-          "example": "Created for Week 06 demo"
+          "example": "Created for demo"
         },
         "status": {
           "type": "string",
@@ -371,11 +361,6 @@
     "User": {
       "type": "object",
       "properties": {
-        "_id": {
-          "type": "string",
-      
-    "example": "1234567890abcdef12345678"
-        },
         "username": {
           "type": "string",
           "example": "johndoe"
@@ -383,6 +368,14 @@
         "email": {
           "type": "string",
           "example": "john.doe@example.com"
+        },
+        "password": {
+          "type": "string",
+          "example": "securepassword"
+        },
+        "googleId": {
+          "type": "string",
+          "example": "google123456789"
         },
         "createdAt": {
           "type": "string",
