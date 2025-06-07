@@ -1,21 +1,48 @@
+const path = require('path');
+const fs = require('fs');
 const express = require('express');
 const dotenv = require('dotenv');
 const session = require('express-session');
-const passport = require('../config/passport');
-const taskRoutes = require('./routes/taskManager');
+
+// Verify .env exists
+const envPath = path.resolve(__dirname, '.env');
+console.log('Checking .env at:', envPath);
+if (fs.existsSync(envPath)) {
+  console.log('.env file found');
+  console.log('File contents:', fs.readFileSync(envPath, 'utf8'));
+} else {
+  console.error('.env file not found');
+}
+
+// Load .env
+const result = dotenv.config({ path: envPath });
+if (result.error) {
+  console.error('Dotenv error:', result.error);
+} else {
+  console.log('Dotenv loaded successfully');
+}
+console.log('Env variables:', {
+  GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+  GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+  SESSION_SECRET: process.env.SESSION_SECRET,
+  MONGODB_URI: process.env.MONGODB_URI ? 'Set' : 'Undefined'
+});
+
+// Require passport after env loading
+const passport = require('./config/passport');
+const taskRoutes = require('./routes/taskRoutes');
 const userRoutes = require('./routes/userRoutes');
 const authRoutes = require('./routes/authRoutes');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
 const errorHandler = require('./middleware/errorHandler');
 
-dotenv.config();
 const app = express();
 app.use(express.json());
 
 app.use(
   session({
-    secret: process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET || 'fallback-secret',
     resave: false,
     saveUninitialized: false
   })
