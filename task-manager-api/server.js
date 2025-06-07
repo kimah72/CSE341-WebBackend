@@ -1,29 +1,39 @@
-const express = require("express");
-const dotenv = require("dotenv");
-const taskRoutes = require("./routes/taskRoutes");
-const userRoutes = require("./routes/userRoutes");
-const swaggerUi = require("swagger-ui-express");
-const swaggerDocument = require("./swagger.json");
-const errorHandler = require("./middleware/errorHandler");
+const express = require('express');
+const dotenv = require('dotenv');
+const session = require('express-session');
+const passport = require('../config/passport');
+const taskRoutes = require('./routes/taskManager');
+const userRoutes = require('./routes/userRoutes');
+const authRoutes = require('./routes/authRoutes');
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
+const errorHandler = require('./middleware/errorHandler');
 
 dotenv.config();
 const app = express();
 app.use(express.json());
 
-const connectDB = require("./config/db");
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
+
+const connectDB = require('./config/db');
 connectDB();
 
-app.get("/", (req, res) => {
-  res.send(`
-    <h1>Welcome to the Task Manager API</h1>
-    <p>Explore the API documentation and test endpoints:</p>
-    <a href="/api-docs">Go to API Documentation</a>
-  `);
+app.get('/', (req, res) => {
+  res.send('Welcome to the Task Manager API');
 });
 
-app.use("/api", taskRoutes);
-app.use("/api", userRoutes);
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/api', taskRoutes);
+app.use('/api', userRoutes);
+app.use('/auth', authRoutes);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(errorHandler);
 
