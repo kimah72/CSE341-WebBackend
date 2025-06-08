@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const passport = require('../config/passport');
+const passport = require('passport');
 
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
@@ -8,21 +8,37 @@ router.get(
   '/google/callback',
   passport.authenticate('google', { failureRedirect: '/' }),
   (req, res) => {
-    res.redirect('/api/profile');
+    console.log('Callback: User authenticated:', req.user);
+    req.session.save((err) => {
+      if (err) {
+        console.error('Session save error:', err);
+        return res.status(500).json({ error: 'Failed to save session' });
+      }
+      res.redirect('/auth/profile');
+    });
   }
 );
 
 router.get('/profile', (req, res) => {
+  console.log('Profile route:', { user: req.user, isAuthenticated: req.isAuthenticated() });
   if (!req.isAuthenticated()) {
     return res.status(401).json({ error: 'Not authenticated' });
+  }
+  if (!req.user) {
+    return res.status(500).json({ error: 'User data not available' });
   }
   res.json({ user: req.user });
 });
 
-router.get('/logout', (req, res) => {
+router.get('/logout', (req, res, next) => {
   req.logout((err) => {
-    if (err) return res.status(500).json({ error: 'Logout failed' });
-    res.redirect('/');
+    if (err) {
+      console.error('Logout error:', err);
+      return res.status(500).json({ error: 'Logout failed' });
+    }
+    req.session.destroy(() => {
+      res.redirect('/');
+    });
   });
 });
 
