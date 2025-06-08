@@ -40,13 +40,17 @@ const errorHandler = require('./middleware/errorHandler');
 const app = express();
 app.use(express.json());
 
+app.set('trust proxy', 1); // Trust Render's proxy
 app.use(
   session({
     secret: process.env.SESSION_SECRET || 'fallback-secret',
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }),
-    cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 } // 24 hours
+    cookie: { 
+      secure: process.env.NODE_ENV === 'production' ? true : false, 
+      maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    }
   })
 );
 app.use((req, res, next) => {
@@ -64,6 +68,7 @@ app.get('/', (req, res) => {
     <h1>Welcome to the Task Manager API</h1>
     <p>Explore the API documentation and test endpoints:</p>
     <a href="/api-docs">Go to API Documentation</a>
+    <br>
     <a href="/auth/google">Login with Google</a>
   `);
 });
