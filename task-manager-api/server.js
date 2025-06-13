@@ -4,6 +4,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
+const cors = require('cors'); // Add CORS
 
 // Verify .env exists
 const envPath = path.resolve(__dirname, '.env');
@@ -38,9 +39,10 @@ const swaggerDocument = require('./swagger.json');
 const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
+app.use(cors()); // Enable CORS
 app.use(express.json());
 
-app.set('trust proxy', 1); // Trust Render's proxy
+app.set('trust proxy', 1);
 app.use(
   session({
     secret: process.env.SESSION_SECRET || 'fallback-secret',
@@ -49,7 +51,7 @@ app.use(
     store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }),
     cookie: { 
       secure: process.env.NODE_ENV === 'production' ? true : false, 
-      maxAge: 24 * 60 * 60 * 1000 // 24 hours
+      maxAge: 24 * 60 * 60 * 1000
     }
   })
 );
