@@ -2,9 +2,9 @@
   "name": "task-manager-api",
   "version": "1.0.0",
   "scripts": {
-    "start": "node dist/server.js",
+    "start": "set NODE_ENV=production&& node dist/server.js",
     "dev": "nodemon server.ts",
-    "build": "tsc",
+    "build": "rimraf dist && tsc || (del /s /q dist && tsc)",
     "lint": "eslint . --ext .js,.ts",
     "lint:fix": "eslint . --ext .js,.ts --fix",
     "format": "prettier --write ."
@@ -19,6 +19,7 @@
     "mongoose": "^8.0.1",
     "passport": "^0.6.0",
     "passport-google-oauth20": "^2.0.0",
+    "rimraf": "^5.0.5",
     "swagger-ui-express": "^5.0.0"
   },
   "devDependencies": {

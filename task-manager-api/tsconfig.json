@@ -12,6 +12,14 @@
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true
   },
-  "include": ["**/*.ts"],
-  "exclude": ["node_modules", "dist", "**/*.d.ts"]
+  "include": [
+    "server.ts",
+    "config/**/*.ts",
+    "models/**/*.ts",
+    "routes/**/*.ts",
+    "controllers/**/*.ts",
+    "middleware/**/*.ts",
+    "types/**/*.d.ts"
+  ],
+  "exclude": ["node_modules", "dist"]
 }

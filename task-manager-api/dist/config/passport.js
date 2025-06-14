@@ -4,18 +4,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const passport_1 = __importDefault(require("passport"));
-const passport_google_oauth20_1 = __importDefault(require("passport-google-oauth20"));
+const passport_google_oauth20_1 = require("passport-google-oauth20");
 const User_1 = __importDefault(require("../models/User"));
 const callbackURL = process.env.NODE_ENV === "production"
     ? "https://task-manager-api-9tji.onrender.com/auth/google/callback"
     : "http://localhost:5000/auth/google/callback";
-passport_1.default.use(new passport_google_oauth20_1.default.Strategy({
+passport_1.default.use(new passport_google_oauth20_1.Strategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     callbackURL,
     scope: ["profile", "email"],
     proxy: true,
-}, async (accessToken, refreshToken, profile, done) => {
+}, async (_accessToken, _refreshToken, profile, done) => {
     try {
         console.log("Google profile:", profile);
         let user = await User_1.default.findOne({ googleId: profile.id });
@@ -34,7 +34,7 @@ passport_1.default.use(new passport_google_oauth20_1.default.Strategy({
     }
     catch (error) {
         console.error("GoogleStrategy error:", error);
-        done(error, false);
+        done(error, null);
     }
 }));
 passport_1.default.serializeUser((user, done) => {

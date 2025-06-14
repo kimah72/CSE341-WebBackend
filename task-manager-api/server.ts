@@ -7,23 +7,27 @@ import MongoStore from "connect-mongo";
 import cors from "cors";
 import { connectDB } from "./config/db";
 
-// Verify .env exists
-const envPath: string = path.resolve(__dirname, ".env");
-console.log("Checking .env at:", envPath);
-if (fs.existsSync(envPath)) {
-  console.log(".env file found");
-  console.log("File contents:", fs.readFileSync(envPath, "utf8"));
-} else {
-  console.error(".env file not found");
+// Debug NODE_ENV
+console.log("NODE_ENV:", process.env.NODE_ENV || "undefined");
+
+// Load .env only if explicitly in development or NODE_ENV is unset
+if (!process.env.NODE_ENV || process.env.NODE_ENV !== "production") {
+  const envPath: string = path.resolve(__dirname, ".env");
+  console.log("Checking .env at:", envPath);
+  if (fs.existsSync(envPath)) {
+    console.log(".env file found");
+    console.log("File contents:", fs.readFileSync(envPath, "utf8"));
+  } else {
+    console.error(".env file not found");
+  }
+  const result = dotenv.config({ path: envPath });
+  if (result.error) {
+    console.error("Dotenv error:", result.error);
+  } else {
+    console.log("Dotenv loaded successfully");
+  }
 }
 
-// Load .env
-const result = dotenv.config({ path: envPath });
-if (result.error) {
-  console.error("Dotenv error:", result.error);
-} else {
-  console.log("Dotenv loaded successfully");
-}
 console.log("Env variables:", {
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
@@ -31,11 +35,9 @@ console.log("Env variables:", {
   MONGODB_URI: process.env.MONGODB_URI ? "Set" : "Undefined",
 });
 
-// Initialize app after .env
 const app: Express = express();
 app.use(express.json());
 
-// CORS
 app.use(
   cors({
     origin: [
@@ -48,7 +50,6 @@ app.use(
   })
 );
 
-// Session and Passport
 app.set("trust proxy", 1);
 app.use(
   session({
@@ -74,15 +75,12 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
-// Load Passport after .env
 import passport from "./config/passport";
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Connect DB
 connectDB();
 
-// Routes
 import taskRoutes from "./routes/taskRoutes";
 import userRoutes from "./routes/userRoutes";
 import authRoutes from "./routes/authRoutes";
