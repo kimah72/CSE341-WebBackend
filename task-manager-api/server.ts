@@ -3,23 +3,24 @@ const fs = require('fs');
 const dotenv = require('dotenv');
 import express, { Express } from 'express';
 
-// Verify .env exists
-const envPath: string = path.resolve(__dirname, '.env');
-console.log('Checking .env at:', envPath);
-if (!fs.existsSync(envPath)) {
-  console.error('.env file not found');
-  process.exit(1);
-}
-console.log('.env file found');
-console.log('File contents:', fs.readFileSync(envPath, 'utf8'));
+// Load .env only in development
+if (process.env.NODE_ENV !== 'production') {
+  const envPath: string = path.resolve(__dirname, '.env');
+  console.log('Checking .env at:', envPath);
+  if (!fs.existsSync(envPath)) {
+    console.error('.env file not found');
+    process.exit(1);
+  }
+  console.log('.env file found');
+  console.log('File contents:', fs.readFileSync(envPath, 'utf8'));
 
-// Load .env
-const result = dotenv.config({ path: envPath });
-if (result.error) {
-  console.error('Dotenv error:', result.error);
-  process.exit(1);
+  const result = dotenv.config({ path: envPath });
+  if (result.error) {
+    console.error('Dotenv error:', result.error);
+    process.exit(1);
+  }
+  console.log('Dotenv loaded successfully');
 }
-console.log('Dotenv loaded successfully');
 
 // Verify critical env variables
 const requiredEnvVars = ['GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET', 'SESSION_SECRET', 'MONGODB_URI'];
