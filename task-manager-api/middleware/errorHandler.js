@@ -3,7 +3,7 @@ const errorHandler = (err, req, res, _next) => {
   const message = err.message || "Server Error";
   res.status(status).json({
     error: message,
-    ...(err.errors && { errors: err.errors }),
+    ...(err.errors && { errors: err.errors })
   });
 };
 

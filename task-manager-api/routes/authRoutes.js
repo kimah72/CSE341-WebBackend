@@ -2,10 +2,7 @@ const express = require("express");
 const router = express.Router();
 const passport = require("passport");
 
-router.get(
-  "/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
-);
+router.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }));
 
 router.get(
   "/google/callback",
@@ -23,10 +20,7 @@ router.get(
 );
 
 router.get("/profile", (req, res) => {
-  console.log("Profile route:", {
-    user: req.user,
-    isAuthenticated: req.isAuthenticated(),
-  });
+  console.log("Profile route:", { user: req.user, isAuthenticated: req.isAuthenticated() });
   if (!req.isAuthenticated()) {
     return res.status(401).json({ error: "Not authenticated" });
   }
@@ -36,7 +30,7 @@ router.get("/profile", (req, res) => {
   res.json({ user: req.user });
 });
 
-router.get("/logout", (req, res, next) => {
+router.get("/logout", (req, res, _next) => {
   req.logout((err) => {
     if (err) {
       console.error("Logout error:", err);
@@ -45,10 +39,13 @@ router.get("/logout", (req, res, next) => {
     req.session.destroy((err) => {
       if (err) {
         console.error("Session destroy error:", err);
-        return res.status(500).json({ error: "Session destroy failed" });
+        return res.status(500).json({ error: "Failed to destroy session" });
       }
-      res.clearCookie("connect.sid"); // Clear session cookie
-      console.log("Logout successful, session destroyed");
+      res.clearCookie("connect.sid", {
+        path: "/",
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production" ? true : false
+      });
       res.redirect("/");
     });
   });
