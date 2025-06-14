@@ -4,6 +4,18 @@ import { getUsers, createUser } from "../controllers/userController";
 
 const router: Router = express.Router();
 
+const isAuthenticated = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
+  if (!req.isAuthenticated()) {
+    res.status(401).json({ error: "Not authenticated" });
+    return;
+  }
+  next();
+};
+
 const validateUser = [
   body("username")
     .notEmpty()
@@ -17,7 +29,7 @@ const validateUser = [
     .withMessage("Password must be at least 6 characters"),
 ];
 
-router.get("/users", getUsers);
-router.post("/users", validateUser, createUser);
+router.get("/users", isAuthenticated, getUsers);
+router.post("/users", isAuthenticated, validateUser, createUser);
 
 export default router;

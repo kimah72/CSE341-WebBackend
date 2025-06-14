@@ -7,6 +7,13 @@ const express_1 = __importDefault(require("express"));
 const express_validator_1 = require("express-validator");
 const userController_1 = require("../controllers/userController");
 const router = express_1.default.Router();
+const isAuthenticated = (req, res, next) => {
+    if (!req.isAuthenticated()) {
+        res.status(401).json({ error: "Not authenticated" });
+        return;
+    }
+    next();
+};
 const validateUser = [
     (0, express_validator_1.body)("username")
         .notEmpty()
@@ -19,6 +26,6 @@ const validateUser = [
         .isLength({ min: 6 })
         .withMessage("Password must be at least 6 characters"),
 ];
-router.get("/users", userController_1.getUsers);
-router.post("/users", validateUser, userController_1.createUser);
+router.get("/users", isAuthenticated, userController_1.getUsers);
+router.post("/users", isAuthenticated, validateUser, userController_1.createUser);
 exports.default = router;
