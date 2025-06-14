@@ -1,13 +1,18 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Task Manager API",
+    "title": "API Task Manager",
     "version": "1.0.0",
     "description": "API for managing tasks with Google OAuth"
   },
   "servers": [
     { "url": "https://task-manager-api-9tji.onrender.com" },
     { "url": "http://localhost:5000" }
+  ],
+  "tags": [
+    { "name": "Auth", "description": "Authentication endpoints" },
+    { "name": "Tasks", "description": "Task management endpoints" },
+    { "name": "Users", "description": "User management endpoints" }
   ],
   "components": {
     "securitySchemes": {
@@ -53,11 +58,19 @@
       },
       "User": {
         "type": "object",
+        "required": ["username", "email"],
         "properties": {
           "_id": { "type": "string" },
           "username": { "type": "string" },
           "email": { "type": "string" },
-          "googleId": { "type": "string" }
+          "password": { "type": "string" },
+          "googleId": { "type": "string" },
+          "createdAt": { "type": "string", "format": "date-time" }
+        },
+        "example": {
+          "username": "Kim Miner",
+          "email": "kimah72@gmail.com",
+          "password": "securepass123"
         }
       }
     }
@@ -65,6 +78,7 @@
   "paths": {
     "/auth/google": {
       "get": {
+        "tags": ["Auth"],
         "summary": "Initiate Google OAuth login",
         "responses": {
           "200": {
@@ -85,6 +99,7 @@
     },
     "/auth/profile": {
       "get": {
+        "tags": ["Auth"],
         "summary": "Get authenticated user profile",
         "security": [{ "OAuth2": ["profile", "email"] }],
         "responses": {
@@ -102,6 +117,7 @@
     },
     "/auth/logout": {
       "get": {
+        "tags": ["Auth"],
         "summary": "Log out user",
         "security": [{ "OAuth2": ["profile", "email"] }],
         "responses": {
@@ -123,6 +139,7 @@
     },
     "/api/tasks": {
       "get": {
+        "tags": ["Tasks"],
         "summary": "Get all tasks for user",
         "security": [{ "OAuth2": ["profile", "email"] }],
         "responses": {
@@ -137,6 +154,7 @@
         }
       },
       "post": {
+        "tags": ["Tasks"],
         "summary": "Create a task",
         "security": [{ "OAuth2": ["profile", "email"] }],
         "requestBody": {
@@ -164,6 +182,7 @@
     },
     "/api/tasks/{id}": {
       "get": {
+        "tags": ["Tasks"],
         "summary": "Get a task by ID",
         "security": [{ "OAuth2": ["profile", "email"] }],
         "parameters": [
@@ -182,6 +201,7 @@
         }
       },
       "put": {
+        "tags": ["Tasks"],
         "summary": "Update a task",
         "security": [{ "OAuth2": ["profile", "email"] }],
         "parameters": [
@@ -211,6 +231,7 @@
         }
       },
       "delete": {
+        "tags": ["Tasks"],
         "summary": "Delete a task",
         "security": [{ "OAuth2": ["profile", "email"] }],
         "parameters": [
@@ -219,6 +240,49 @@
         "responses": {
           "200": { "description": "Task deleted" },
           "404": { "description": "Task not found" }
+        }
+      }
+    },
+    "/api/users": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Get all users",
+        "responses": {
+          "200": {
+            "description": "List of users",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/User" } }
+              }
+            }
+          },
+          "500": { "description": "Server error" }
+        }
+      },
+      "post": {
+        "tags": ["Users"],
+        "summary": "Create a new user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User created",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/User" }
+              }
+            }
+          },
+          "422": { "description": "Validation error" },
+          "400": { "description": "Bad request" }
         }
       }
     }

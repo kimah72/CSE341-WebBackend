@@ -1,6 +1,16 @@
-const mongoose = require("mongoose");
+import mongoose, { Schema, Document } from "mongoose";
 
-const taskSchema = new mongoose.Schema({
+export interface ITask extends Document {
+  title: string;
+  description?: string;
+  status: "pending" | "in-progress" | "completed";
+  dueDate?: Date;
+  userId: mongoose.Types.ObjectId;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+const taskSchema: Schema = new mongoose.Schema({
   title: {
     type: String,
     required: [true, "Title is required"],
@@ -33,9 +43,9 @@ const taskSchema = new mongoose.Schema({
   },
 });
 
-taskSchema.pre("save", function (next) {
-  this.updatedAt = Date.now();
+taskSchema.pre("save", function (next: () => void) {
+  this.updatedAt = new Date();
   next();
 });
 
-module.exports = mongoose.model("Task", taskSchema);
+export default mongoose.model<ITask>("Task", taskSchema);

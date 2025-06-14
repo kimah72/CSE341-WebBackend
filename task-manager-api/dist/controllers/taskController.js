@@ -42,12 +42,10 @@ const expressValidator = __importStar(require("express-validator"));
 const { validationResult } = expressValidator;
 const getTasks = async (req, res, next) => {
     try {
-        // TEMP: Comment out user check
-        // if (!req.user) {
-        //   throw new Error("User not authenticated");
-        // }
-        // const tasks = await Task.find({ userId: req.user._id });
-        const tasks = await Task_1.default.find({}); // TEMP: Fetch all tasks
+        if (!req.user) {
+            throw new Error("User not authenticated");
+        }
+        const tasks = await Task_1.default.find({ userId: req.user._id });
         res.json(tasks);
     }
     catch (error) {
@@ -59,15 +57,13 @@ const getTasks = async (req, res, next) => {
 exports.getTasks = getTasks;
 const getTaskById = async (req, res, next) => {
     try {
-        // TEMP: Comment out user check
-        // if (!req.user) {
-        //   throw new Error("User not authenticated");
-        // }
-        // const task = await Task.findOne({
-        //   _id: req.params.id,
-        //   userId: req.user._id,
-        // });
-        const task = await Task_1.default.findOne({ _id: req.params.id });
+        if (!req.user) {
+            throw new Error("User not authenticated");
+        }
+        const task = await Task_1.default.findOne({
+            _id: req.params.id,
+            userId: req.user._id,
+        });
         if (!task) {
             const error = new Error("Task not found");
             error.status = 404;
@@ -91,12 +87,10 @@ const createTask = async (req, res, next) => {
             error.errors = errors.array();
             throw error;
         }
-        // TEMP: Comment out user check
-        // if (!req.user) {
-        //   throw new Error("User not authenticated");
-        // }
-        // const task = new Task({ ...req.body, userId: req.user._id });
-        const task = new Task_1.default({ ...req.body, userId: "temp_user_id" }); // TEMP: Static userId
+        if (!req.user) {
+            throw new Error("User not authenticated");
+        }
+        const task = new Task_1.default({ ...req.body, userId: req.user._id });
         await task.save();
         res.status(201).json(task);
     }
@@ -116,16 +110,10 @@ const updateTask = async (req, res, next) => {
             error.errors = errors.array();
             throw error;
         }
-        // TEMP: Comment out user check
-        // if (!req.user) {
-        //   throw new Error("User not authenticated");
-        // }
-        // const task = await Task.findOneAndUpdate(
-        //   { _id: req.params.id, userId: req.user._id },
-        //   { ...req.body, updatedAt: new Date() },
-        //   { new: true }
-        // );
-        const task = await Task_1.default.findOneAndUpdate({ _id: req.params.id }, { ...req.body, updatedAt: new Date() }, { new: true });
+        if (!req.user) {
+            throw new Error("User not authenticated");
+        }
+        const task = await Task_1.default.findOneAndUpdate({ _id: req.params.id, userId: req.user._id }, { ...req.body, updatedAt: new Date() }, { new: true });
         if (!task) {
             const error = new Error("Task not found");
             error.status = 404;
@@ -142,15 +130,13 @@ const updateTask = async (req, res, next) => {
 exports.updateTask = updateTask;
 const deleteTask = async (req, res, next) => {
     try {
-        // TEMP: Comment out user check
-        // if (!req.user) {
-        //   throw new Error("User not authenticated");
-        // }
-        // const task = await Task.findOneAndDelete({
-        //   _id: req.params.id,
-        //   userId: req.user._id,
-        // });
-        const task = await Task_1.default.findOneAndDelete({ _id: req.params.id });
+        if (!req.user) {
+            throw new Error("User not authenticated");
+        }
+        const task = await Task_1.default.findOneAndDelete({
+            _id: req.params.id,
+            userId: req.user._id,
+        });
         if (!task) {
             const error = new Error("Task not found");
             error.status = 404;

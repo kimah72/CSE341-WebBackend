@@ -1,17 +1,23 @@
-const express = require("express");
-const router = express.Router();
-const { body, validationResult } = require("express-validator");
-const {
+import express, { Router, Request, Response, NextFunction } from "express";
+import { body } from "express-validator";
+import {
   getTasks,
   getTaskById,
   createTask,
   updateTask,
   deleteTask,
-} = require("../controllers/taskController");
+} from "../controllers/taskController";
 
-const isAuthenticated = (req, res, next) => {
+const router: Router = express.Router();
+
+const isAuthenticated = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
   if (!req.isAuthenticated()) {
-    return res.status(401).json({ error: "Not authenticated" });
+    res.status(401).json({ error: "Not authenticated" });
+    return;
   }
   next();
 };
@@ -33,4 +39,4 @@ router.post("/tasks", isAuthenticated, validateTask, createTask);
 router.put("/tasks/:id", isAuthenticated, validateTask, updateTask);
 router.delete("/tasks/:id", isAuthenticated, deleteTask);
 
-module.exports = router;
+export default router;
