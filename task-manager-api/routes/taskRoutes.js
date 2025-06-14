@@ -6,7 +6,7 @@ const {
   getTaskById,
   createTask,
   updateTask,
-  deleteTask
+  deleteTask,
 } = require("../controllers/taskController");
 
 const isAuthenticated = (req, res, next) => {
@@ -24,10 +24,7 @@ const validateTask = [
     .optional()
     .isIn(["pending", "in-progress", "completed"])
     .withMessage("Invalid status"),
-  body("dueDate")
-    .optional()
-    .isISO8601()
-    .withMessage("Invalid date format")
+  body("dueDate").optional().isISO8601().withMessage("Invalid date format"),
 ];
 
 router.get("/tasks", isAuthenticated, getTasks);

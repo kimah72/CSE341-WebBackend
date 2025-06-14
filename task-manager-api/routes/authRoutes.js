@@ -2,7 +2,14 @@ const express = require("express");
 const router = express.Router();
 const passport = require("passport");
 
-router.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }));
+router.get("/google", (req, res, _next) => {
+  if (req.headers.accept && req.headers.accept.includes("application/json")) {
+    return res.json({ redirect: "/auth/google/oauth" });
+  }
+  passport.authenticate("google", { scope: ["profile", "email"] })(req, res, _next);
+});
+
+router.get("/google/oauth", passport.authenticate("google", { scope: ["profile", "email"] }));
 
 router.get(
   "/google/callback",
@@ -44,9 +51,10 @@ router.get("/logout", (req, res, _next) => {
       res.clearCookie("connect.sid", {
         path: "/",
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production" ? true : false
+        secure: process.env.NODE_ENV === "production" ? true : false,
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
       });
-      res.redirect("/");
+      res.json({ message: "Logged out" });
     });
   });
 });

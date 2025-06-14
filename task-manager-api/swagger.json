@@ -67,7 +67,19 @@
       "get": {
         "summary": "Initiate Google OAuth login",
         "responses": {
-          "302": { "description": "Redirect to Google login" }
+          "200": {
+            "description": "Redirect URL for OAuth",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "redirect": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -93,7 +105,19 @@
         "summary": "Log out user",
         "security": [{ "OAuth2": ["profile", "email"] }],
         "responses": {
-          "302": { "description": "Redirect to home" }
+          "200": {
+            "description": "Logged out",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     },

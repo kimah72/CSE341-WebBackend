@@ -2,9 +2,10 @@ const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const User = require("../models/User");
 
-const callbackURL = process.env.NODE_ENV === "production"
-  ? "https://task-manager-api-9tji.onrender.com/auth/google/callback"
-  : "http://localhost:5000/auth/google/callback";
+const callbackURL =
+  process.env.NODE_ENV === "production"
+    ? "https://task-manager-api-9tji.onrender.com/auth/google/callback"
+    : "http://localhost:5000/auth/google/callback";
 
 passport.use(
   new GoogleStrategy(

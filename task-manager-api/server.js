@@ -4,7 +4,7 @@ const express = require("express");
 const dotenv = require("dotenv");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
-const cors = require("cors"); // Add CORS
+const cors = require("cors");
 
 // Verify .env exists
 const envPath = path.resolve(__dirname, ".env");
@@ -27,7 +27,7 @@ console.log("Env variables:", {
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
   SESSION_SECRET: process.env.SESSION_SECRET,
-  MONGODB_URI: process.env.MONGODB_URI ? "Set" : "Undefined",
+  MONGODB_URI: process.env.MONGODB_URI ? "Set" : "Undefined"
 });
 
 const passport = require("./config/passport");
@@ -39,8 +39,13 @@ const swaggerDocument = require("./swagger.json");
 const errorHandler = require("./middleware/errorHandler");
 
 const app = express();
-app.use(cors()); // Enable CORS
 app.use(express.json());
+app.use(cors({
+  origin: ["http://localhost:5000", "https://task-manager-api-9tji.onrender.com"],
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
 
 app.set("trust proxy", 1);
 app.use(
@@ -48,11 +53,18 @@ app.use(
     secret: process.env.SESSION_SECRET || "fallback-secret",
     resave: false,
     saveUninitialized: false,
-    store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }),
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGODB_URI,
+      collectionName: "sessions",
+      ttl: 24 * 60 * 60 // 24 hours
+    }),
     cookie: {
       secure: process.env.NODE_ENV === "production" ? true : false,
       maxAge: 24 * 60 * 60 * 1000,
-    },
+      httpOnly: true,
+      path: "/",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
+    }
   })
 );
 app.use((req, res, next) => {
