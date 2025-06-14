@@ -1,0 +1,226 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Task Manager API",
+        "version": "1.0.0",
+        "description": "API for managing tasks with Google OAuth"
+    },
+    "servers": [
+        { "url": "https://task-manager-api-9tji.onrender.com" },
+        { "url": "http://localhost:5000" }
+    ],
+    "components": {
+        "securitySchemes": {
+            "OAuth2": {
+                "type": "oauth2",
+                "flows": {
+                    "authorizationCode": {
+                        "authorizationUrl": "/auth/google",
+                        "tokenUrl": "https://oauth2.googleapis.com/token",
+                        "scopes": {
+                            "profile": "Access user profile",
+                            "email": "Access user email"
+                        }
+                    }
+                }
+            }
+        },
+        "schemas": {
+            "Task": {
+                "type": "object",
+                "required": ["title", "userId"],
+                "properties": {
+                    "_id": { "type": "string", "description": "Task ID" },
+                    "title": { "type": "string", "description": "Task title" },
+                    "description": { "type": "string", "description": "Task description" },
+                    "status": {
+                        "type": "string",
+                        "enum": ["pending", "in-progress", "completed"],
+                        "description": "Task status"
+                    },
+                    "dueDate": { "type": "string", "format": "date", "description": "Due date (YYYY-MM-DD)" },
+                    "userId": { "type": "string", "description": "User ID" },
+                    "createdAt": { "type": "string", "format": "date-time", "description": "Creation date" },
+                    "updatedAt": { "type": "string", "format": "date-time", "description": "Update date" }
+                },
+                "example": {
+                    "title": "Complete Lesson 8",
+                    "description": "Finish Task Manager API",
+                    "status": "pending",
+                    "dueDate": "2025-06-15",
+                    "userId": "68449debbc2284bf49a38ed3"
+                }
+            },
+            "User": {
+                "type": "object",
+                "properties": {
+                    "_id": { "type": "string" },
+                    "username": { "type": "string" },
+                    "email": { "type": "string" },
+                    "googleId": { "type": "string" }
+                }
+            }
+        }
+    },
+    "paths": {
+        "/auth/google": {
+            "get": {
+                "summary": "Initiate Google OAuth login",
+                "responses": {
+                    "200": {
+                        "description": "Redirect URL for OAuth",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "redirect": { "type": "string" }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/profile": {
+            "get": {
+                "summary": "Get authenticated user profile",
+                "security": [{ "OAuth2": ["profile", "email"] }],
+                "responses": {
+                    "200": {
+                        "description": "User profile",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/User" }
+                            }
+                        }
+                    },
+                    "401": { "description": "Not authenticated" }
+                }
+            }
+        },
+        "/auth/logout": {
+            "get": {
+                "summary": "Log out user",
+                "security": [{ "OAuth2": ["profile", "email"] }],
+                "responses": {
+                    "200": {
+                        "description": "Logged out",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": { "type": "string" }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/tasks": {
+            "get": {
+                "summary": "Get all tasks for user",
+                "security": [{ "OAuth2": ["profile", "email"] }],
+                "responses": {
+                    "200": {
+                        "description": "List of tasks",
+                        "content": {
+                            "application/json": {
+                                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Task" } }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Create a task",
+                "security": [{ "OAuth2": ["profile", "email"] }],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Task"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Task created",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/Task" }
+                            }
+                        }
+                    },
+                    "422": { "description": "Validation error" }
+                }
+            }
+        },
+        "/api/tasks/{id}": {
+            "get": {
+                "summary": "Get a task by ID",
+                "security": [{ "OAuth2": ["profile", "email"] }],
+                "parameters": [
+                    { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Task details",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/Task" }
+                            }
+                        }
+                    },
+                    "404": { "description": "Task not found" }
+                }
+            },
+            "put": {
+                "summary": "Update a task",
+                "security": [{ "OAuth2": ["profile", "email"] }],
+                "parameters": [
+                    { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Task"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Task updated",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/Task" }
+                            }
+                        }
+                    },
+                    "404": { "description": "Task not found" },
+                    "422": { "description": "Validation error" }
+                }
+            },
+            "delete": {
+                "summary": "Delete a task",
+                "security": [{ "OAuth2": ["profile", "email"] }],
+                "parameters": [
+                    { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+                ],
+                "responses": {
+                    "200": { "description": "Task deleted" },
+                    "404": { "description": "Task not found" }
+                }
+            }
+        }
+    }
+}
