@@ -1,32 +1,28 @@
 import path from 'path';
-import fs from 'fs';
 import dotenv from 'dotenv';
 import express, { Express, Request, Response, NextFunction, RequestHandler } from 'express';
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
 const cors = require("cors");
 
-// Verify .env exists
-const envPath: string = path.resolve(__dirname, '.env');
-console.log('Checking .env at:', envPath);
-if (!fs.existsSync(envPath)) {
-  console.error('.env file not found');
-  process.exit(1);
+// Load .env only in development
+if (process.env.NODE_ENV !== 'production') {
+  const envPath = path.resolve(__dirname, '.env'); // Root .env for dev
+  const result = dotenv.config({ path: envPath });
+  if (result.error) {
+    console.error('Dotenv error:', result.error);
+    process.exit(1); // Exit only in dev if .env fails
+  } else {
+    console.log('Dotenv loaded successfully');
+  }
 }
 
-// Load .env
-const result = dotenv.config({ path: envPath });
-if (result.error) {
-  console.error("Dotenv error:", result.error);
-} else {
-  console.log("Dotenv loaded successfully");
-}
-
+// Log environment variables for debugging
 console.log('Env variables:', {
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID ? 'Set' : 'Undefined',
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET ? 'Set' : 'Undefined',
   SESSION_SECRET: process.env.SESSION_SECRET ? 'Set' : 'Undefined',
-  MONGODB_URI: process.env.MONGODB_URI ? 'Set' : 'Undefined'
+  MONGODB_URI: process.env.MONGODB_URI ? 'Set' : 'Undefined',
 });
 
 const passport = require("./config/passport");
