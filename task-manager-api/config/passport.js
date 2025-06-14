@@ -13,7 +13,7 @@ passport.use(
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL,
       scope: ["profile", "email"],
-      proxy: true
+      proxy: true,
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
@@ -22,8 +22,11 @@ passport.use(
         if (!user) {
           user = new User({
             username: profile.displayName || `user_${profile.id}`,
-            email: profile.emails && profile.emails[0] ? profile.emails[0].value : "",
-            googleId: profile.id
+            email:
+              profile.emails && profile.emails[0]
+                ? profile.emails[0].value
+                : "",
+            googleId: profile.id,
           });
           await user.save();
           console.log("New user saved:", user);
