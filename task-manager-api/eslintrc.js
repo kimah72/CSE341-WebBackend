@@ -3,7 +3,7 @@ module.exports = {
     node: true,
     es2021: true,
   },
-  extends: ["airbnb-base", "plugin:prettier/recommended"],
+  extends: ["eslint:recommended", "plugin:prettier/recommended"],
   parserOptions: {
     ecmaVersion: 12,
     sourceType: "module",
@@ -11,6 +11,7 @@ module.exports = {
   plugins: ["prettier"],
   rules: {
     "no-console": "warn",
-    "prettier/prettier": ["error", { singleQuote: false }],
+    "prettier/prettier": ["error", { singleQuote: false, semi: true }],
+    "no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
   },
 };

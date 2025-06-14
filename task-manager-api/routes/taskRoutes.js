@@ -1,17 +1,24 @@
 const express = require("express");
 const router = express.Router();
-const { body } = require("express-validator");
+const { body, validationResult } = require("express-validator");
 const {
   getTasks,
   getTaskById,
   createTask,
   updateTask,
-  deleteTask,
+  deleteTask
 } = require("../controllers/taskController");
+
+const isAuthenticated = (req, res, next) => {
+  if (!req.isAuthenticated()) {
+    return res.status(401).json({ error: "Not authenticated" });
+  }
+  next();
+};
 
 const validateTask = [
   body("title").notEmpty().withMessage("Title is required").trim(),
-  body("description").notEmpty().withMessage("Description is required").trim(),
+  body("description").optional().trim(),
   body("userId").isMongoId().withMessage("Invalid user ID"),
   body("status")
     .optional()
@@ -21,14 +28,12 @@ const validateTask = [
     .optional()
     .isISO8601()
     .withMessage("Invalid date format")
-    .matches(/^\d{4}-\d{2}-\d{2}$/)
-    .withMessage("Date must be YYYY-MM-DD"),
 ];
 
-router.get("/tasks", getTasks);
-router.get("/tasks/:id", getTaskById);
-router.post("/tasks", validateTask, createTask);
-router.put("/tasks/:id", validateTask, updateTask);
-router.delete("/tasks/:id", deleteTask);
+router.get("/tasks", isAuthenticated, getTasks);
+router.get("/tasks/:id", isAuthenticated, getTaskById);
+router.post("/tasks", isAuthenticated, validateTask, createTask);
+router.put("/tasks/:id", isAuthenticated, validateTask, updateTask);
+router.delete("/tasks/:id", isAuthenticated, deleteTask);
 
 module.exports = router;
